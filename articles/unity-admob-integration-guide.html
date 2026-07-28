@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Integrate AdMob in Unity Without Losing a Weekend</title>
+<meta name="description" content="A practical walkthrough of setting up Google AdMob and mediation in a Unity project — the manual steps, the common failure points, and how the Ad Integration Toolkit automates the tedious parts.">
+<link rel="canonical" href="https://ksgames.github.io/articles/unity-admob-integration-guide.html">
+<meta property="og:title" content="How to Integrate AdMob in Unity Without Losing a Weekend">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Integrate AdMob in Unity Without Losing a Weekend",
+  "author": { "@type": "Person", "name": "Kenan" },
+  "publisher": { "@type": "Organization", "name": "KS Games" }
+}
+</script>
+</head>
+<body>
+
+<div class="depth-gauge" aria-hidden="true">
+  <div class="depth-gauge__track" id="gaugeTrack">
+    <div class="depth-gauge__fill" id="gaugeFill"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <header class="site">
+    <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
+    <nav class="site">
+      <a href="../index.html#products">Products</a>
+      <a href="index.html">Articles</a>
+      <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
+    </nav>
+  </header>
+
+  <article class="article">
+    <div class="article__eyebrow">Unity · Monetization</div>
+    <h1>How to integrate AdMob in Unity without losing a weekend</h1>
+    <p class="article__dek">Google's own docs get you 80% of the way there. The last 20% — mediation adapters, ad unit wiring, and testing without accidentally shipping test ads — is where most solo devs lose a Saturday.</p>
+    <div class="article__meta">STUDIO LOG · UNITY ADS</div>
+
+    <div class="prose">
+      <p>If you've shipped a mobile game before, you already know the shape of this problem. The Google Mobile Ads Unity plugin itself is simple to import. What eats your time is everything downstream of it: creating ad unit IDs in the AdMob console, matching them correctly to banner, interstitial, and rewarded placements in code, then repeating that whole process again for every mediation network you add — Unity Ads, AppLovin, Meta Audience Network, ironSource — each with its own adapter package and its own quirks.</p>
+
+      <h2>The manual path</h2>
+      <p>Here's roughly what setting this up by hand looks like:</p>
+      <ol>
+        <li>Create an AdMob account and register your app for iOS and Android separately.</li>
+        <li>Generate ad unit IDs for each placement type you plan to show.</li>
+        <li>Import the Google Mobile Ads Unity plugin and configure the <code>GoogleMobileAdsSettings</code> asset.</li>
+        <li>Write loading, showing, and callback-handling code for each ad type — and usually duplicate a lot of that code across banner, interstitial, and rewarded.</li>
+        <li>Add each mediation network's adapter SDK through the Ad Mediation Manager, resolve version mismatches, and rebuild.</li>
+        <li>Test everything with test ad unit IDs, then remember to swap every single ID back to production before you build a release — this step alone causes more App Store rejections and lost revenue than almost anything else in mobile publishing.</li>
+      </ol>
+
+      <div class="callout">The single most common mistake at this stage isn't a bug — it's a leftover test ad ID that ships to production, or a production ID that accidentally stays active during development and skews your test metrics.</div>
+
+      <h2>Where the time actually goes</h2>
+      <p>None of the individual steps above are hard. What makes AdMob integration slow is that it's <strong>repetitive, easy to get subtly wrong, and different for every project</strong> depending on which mediation networks you're using. A solo developer doing this from scratch is essentially hand-writing boilerplate that's nearly identical from one game to the next.</p>
+
+      <h3>Mediation adapters specifically</h3>
+      <p>Mediation is where things compound. Each network adapter has to be imported, matched to a compatible Google Mobile Ads SDK version, and configured with its own account IDs inside the AdMob mediation groups UI — separately from your Unity project. Miss a step and ads either fail to fill silently or, worse, appear to work in testing and then fail once real traffic hits a mediation waterfall.</p>
+
+      <h2>Automating the repetitive part</h2>
+      <p>This is exactly the gap the <strong>Ad Integration Toolkit</strong> (formerly Quick AdMob Integrator) is built to close. It's a Unity editor extension that:</p>
+      <ul>
+        <li>Configures your ad unit IDs directly from the editor instead of hand-editing scripts.</li>
+        <li>Generates the ad manager scripts for banner, interstitial, and rewarded placements, so you're not rewriting the same callback boilerplate per project.</li>
+        <li>Automates mediation adapter setup, cutting down the manual matching between adapter versions and the Google Mobile Ads SDK.</li>
+        <li>Supports testing ads directly in-editor, so you can verify placements before you're deep into a build-and-check loop on a device.</li>
+      </ul>
+      <p>The goal isn't to hide what AdMob is doing — it's to remove the part of the process that's purely mechanical, so the time you do spend on ads goes toward placement and pacing decisions that actually affect revenue, not toward re-reading SDK version tables.</p>
+
+      <h2>Who this is for</h2>
+      <p>If you're a solo Unity developer or a small team shipping more than one mobile title, the setup cost of AdMob and mediation repeats every time you start a new project. Tooling that automates the repetitive 80% is most valuable exactly there — on your second, third, and tenth game, not just your first.</p>
+
+      <p><a class="btn" href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Get the Ad Integration Toolkit on Gumroad →</a></p>
+    </div>
+  </article>
+
+  <footer class="site">
+    <div>© 2026 KS Games — built by Kenan. <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a></div>
+  </footer>
+</div>
+
+<script>
+  const fill = document.getElementById('gaugeFill');
+  const track = document.getElementById('gaugeTrack');
+  function updateGauge() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    fill.style.height = pct + '%';
+    document.querySelectorAll('.depth-gauge__marker').forEach(m => m.remove());
+    const meters = Math.round(pct * 3);
+    const marker = document.createElement('div');
+    marker.className = 'depth-gauge__marker mono';
+    marker.style.top = pct + '%';
+    marker.textContent = meters + 'm';
+    track.appendChild(marker);
+  }
+  window.addEventListener('scroll', updateGauge);
+  window.addEventListener('resize', updateGauge);
+  updateGauge();
+</script>
+</body>
+</html>

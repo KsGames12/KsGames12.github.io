@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy a Unity Endless Runner Template or Build From Scratch?</title>
+<meta name="description" content="A honest breakdown of when a Unity endless-runner source-code template saves real time versus when you should build the core loop yourself — and what to check before buying one.">
+<link rel="canonical" href="https://ksgames.github.io/articles/unity-endless-runner-template.html">
+<meta property="og:title" content="Should You Buy a Unity Endless Runner Template or Build From Scratch?">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Should You Buy a Unity Endless Runner Template or Build From Scratch?",
+  "author": { "@type": "Person", "name": "Kenan" },
+  "publisher": { "@type": "Organization", "name": "KS Games" }
+}
+</script>
+</head>
+<body>
+
+<div class="depth-gauge" aria-hidden="true">
+  <div class="depth-gauge__track" id="gaugeTrack">
+    <div class="depth-gauge__fill" id="gaugeFill"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <header class="site">
+    <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
+    <nav class="site">
+      <a href="../index.html#products">Products</a>
+      <a href="index.html">Articles</a>
+      <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
+    </nav>
+  </header>
+
+  <article class="article">
+    <div class="article__eyebrow">Unity · Source templates</div>
+    <h1>Should you buy a Unity endless runner template or build from scratch?</h1>
+    <p class="article__dek">Endless runners look simple from the outside. The core loop — spawning, difficulty scaling, and clean reskinning — is where most solo projects quietly stall.</p>
+    <div class="article__meta">STUDIO LOG · UNITY TEMPLATES</div>
+
+    <div class="prose">
+      <p>Endless runners are one of the most commonly attempted "first real game" projects in Unity, for good reason — the core mechanic is a handful of systems: a moving player, procedurally spawning obstacles, and a difficulty curve. But "a handful of systems" undersells how much iteration it takes to get those systems feeling right, and that's where a lot of solo projects stall out before they ever reach a reskin or a store listing.</p>
+
+      <h2>What building the core loop from scratch actually involves</h2>
+      <ul>
+        <li>An obstacle and terrain spawner that doesn't feel repetitive after the third playthrough.</li>
+        <li>A difficulty curve that ramps at a rate players actually notice as fair, not punishing.</li>
+        <li>Clean separation between game logic and art, so the project can be reskinned later without untangling hardcoded references.</li>
+        <li>Object pooling, so spawning obstacles doesn't tank performance on lower-end mobile devices.</li>
+        <li>Basic scoring, game-over, and restart flow wired together consistently.</li>
+      </ul>
+      <p>None of this is exotic engineering, but it's exactly the kind of foundational work that's easy to underestimate — you don't find out your spawner architecture doesn't support easy reskinning until you're two months in and trying to launch a second variant.</p>
+
+      <h2>When a source-code template is worth it</h2>
+      <p>A template makes the most sense when your actual goal is one of these:</p>
+      <ol>
+        <li><strong>You want to reskin and ship quickly</strong> — you're not trying to learn game architecture from first principles, you want a proven core loop you can reskin with new art and mechanics variations.</li>
+        <li><strong>You're a small studio testing multiple concepts</strong> — a working runner template lets you validate an idea with real players before investing in a bespoke system.</li>
+        <li><strong>You want to study a complete, working implementation</strong> — reading finished spawner and difficulty-scaling code is often a faster way to learn than building it blind and debugging your own mistakes.</li>
+      </ol>
+
+      <h3>When building from scratch makes more sense</h3>
+      <p>If the endless runner itself is the learning project — if your goal is understanding Unity's architecture, not shipping a specific game — building from zero has real value that a template would shortcut past. Buy for speed, build for learning; the right call depends on which one you're actually optimizing for.</p>
+
+      <h2>What to check before buying any runner template</h2>
+      <p>Not all templates are equal. Before buying one, check that it includes:</p>
+      <ul>
+        <li>Object pooling already implemented — not something you'll retrofit later.</li>
+        <li>A clear separation between the runner logic and the placeholder art, so reskinning doesn't mean rewriting scripts.</li>
+        <li>Full source access rather than a compiled black box.</li>
+        <li>A difficulty system you can actually tune, not hardcoded constants buried in five different scripts.</li>
+      </ul>
+
+      <div class="callout">A template is worth its price the moment it saves you from re-solving a problem you've already seen solved. It stops being worth it if you spend as long untangling someone else's code as you would have spent writing your own.</div>
+
+      <h2>Wild Sprint</h2>
+      <p><strong>Wild Sprint</strong> is a complete Unity endless-runner source-code template built for exactly the reskin-and-ship case above — aimed at Unity developers, reskinners, and small studios who want a working core loop rather than a from-scratch learning project. It's not positioned as a standalone consumer game, it's the foundation you build your own on top of.</p>
+
+      <p><a class="btn" href="https://ksgames.gumroad.com/l/WildSprint" target="_blank" rel="noopener">Get Wild Sprint on Gumroad — $39.99 →</a></p>
+    </div>
+  </article>
+
+  <footer class="site">
+    <div>© 2026 KS Games — built by Kenan. <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a></div>
+  </footer>
+</div>
+
+<script>
+  const fill = document.getElementById('gaugeFill');
+  const track = document.getElementById('gaugeTrack');
+  function updateGauge() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    fill.style.height = pct + '%';
+    document.querySelectorAll('.depth-gauge__marker').forEach(m => m.remove());
+    const meters = Math.round(pct * 3);
+    const marker = document.createElement('div');
+    marker.className = 'depth-gauge__marker mono';
+    marker.style.top = pct + '%';
+    marker.textContent = meters + 'm';
+    track.appendChild(marker);
+  }
+  window.addEventListener('scroll', updateGauge);
+  window.addEventListener('resize', updateGauge);
+  updateGauge();
+</script>
+</body>
+</html>

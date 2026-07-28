@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Log — Articles on Unity dev tools &amp; freelance systems | KS Games</title>
+<meta name="description" content="Guides on Unity ad mediation, Notion systems for freelancers, and Unity source-code templates, written by indie developer Kenan of KS Games.">
+<link rel="canonical" href="https://ksgames.github.io/articles/">
+<link rel="stylesheet" href="../style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
+</head>
+<body>
+
+<div class="depth-gauge" aria-hidden="true">
+  <div class="depth-gauge__track" id="gaugeTrack">
+    <div class="depth-gauge__fill" id="gaugeFill"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <header class="site">
+    <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
+    <nav class="site">
+      <a href="../index.html#products">Products</a>
+      <a href="index.html">Articles</a>
+      <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="padding: 60px 0 30px;">
+    <div class="hero__eyebrow">Studio log</div>
+    <h1 style="font-size: clamp(30px,5vw,44px);">Notes from building<br>Unity tools &amp; Notion systems.</h1>
+    <p class="lede">Practical write-ups, not marketing copy — from someone actually shipping these tools.</p>
+  </section>
+
+  <section>
+    <div class="logs">
+      <a class="log" href="unity-admob-integration-guide.html">
+        <span class="log__title">How to integrate AdMob in Unity without losing a weekend</span>
+        <span class="log__meta">UNITY · ADS</span>
+      </a>
+      <a class="log" href="notion-system-for-freelancers.html">
+        <span class="log__title">The best Notion setup for freelancers who hate admin</span>
+        <span class="log__meta">NOTION · FREELANCE</span>
+      </a>
+      <a class="log" href="unity-endless-runner-template.html">
+        <span class="log__title">Should you buy a Unity endless runner template or build from scratch?</span>
+        <span class="log__meta">UNITY · TEMPLATES</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div>© 2026 KS Games — built by Kenan. <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a></div>
+  </footer>
+</div>
+
+<script>
+  const fill = document.getElementById('gaugeFill');
+  const track = document.getElementById('gaugeTrack');
+  function updateGauge() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    fill.style.height = pct + '%';
+    document.querySelectorAll('.depth-gauge__marker').forEach(m => m.remove());
+    const meters = Math.round(pct * 3);
+    const marker = document.createElement('div');
+    marker.className = 'depth-gauge__marker mono';
+    marker.style.top = pct + '%';
+    marker.textContent = meters + 'm';
+    track.appendChild(marker);
+  }
+  window.addEventListener('scroll', updateGauge);
+  window.addEventListener('resize', updateGauge);
+  updateGauge();
+</script>
+</body>
+</html>

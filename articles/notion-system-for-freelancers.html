@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Best Notion Setup for Freelancers Who Hate Admin</title>
+<meta name="description" content="Why scattered client pipelines, invoices, and content calendars quietly cost freelancers hours every week, and how a single connected Notion system fixes it.">
+<link rel="canonical" href="https://ksgames.github.io/articles/notion-system-for-freelancers.html">
+<meta property="og:title" content="The Best Notion Setup for Freelancers Who Hate Admin">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Best Notion Setup for Freelancers Who Hate Admin",
+  "author": { "@type": "Person", "name": "Kenan" },
+  "publisher": { "@type": "Organization", "name": "KS Games" }
+}
+</script>
+</head>
+<body>
+
+<div class="depth-gauge" aria-hidden="true">
+  <div class="depth-gauge__track" id="gaugeTrack">
+    <div class="depth-gauge__fill" id="gaugeFill"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <header class="site">
+    <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
+    <nav class="site">
+      <a href="../index.html#products">Products</a>
+      <a href="index.html">Articles</a>
+      <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
+    </nav>
+  </header>
+
+  <article class="article">
+    <div class="article__eyebrow">Notion · Freelance operations</div>
+    <h1>The best Notion setup for freelancers who hate admin</h1>
+    <p class="article__dek">Most freelancers don't lose clients over bad work. They lose momentum to admin scattered across five tools that don't talk to each other.</p>
+    <div class="article__meta">STUDIO LOG · NOTION</div>
+
+    <div class="prose">
+      <p>Talk to any freelancer or solo consultant long enough and a pattern shows up: the work itself isn't what drains them. It's the surrounding admin — tracking which lead is at which stage, remembering who still owes an invoice, and figuring out what to post this week to keep new inquiries coming in. Each of those lives in a different tool, and switching between them is where hours quietly disappear.</p>
+
+      <h2>Why scattered tools cost more than they seem to</h2>
+      <p>A typical freelance stack looks like a spreadsheet for leads, a separate invoicing app, a notes app for client details, and a half-abandoned content calendar somewhere else. None of these connect. A new client means updating four places instead of one, and nothing forces you to notice when a lead has gone quiet for three weeks or an invoice is overdue.</p>
+      <p>The deeper cost isn't the ten minutes per update — it's the mental overhead of remembering all four systems exist and checking each one. That overhead is exactly what makes admin feel heavier than it should.</p>
+
+      <h3>What a connected system actually needs</h3>
+      <p>A workable freelance operations setup needs three things living in the same place, cross-referenced:</p>
+      <ul>
+        <li><strong>A client pipeline</strong> — every lead and active client with a visible stage, so nothing silently stalls.</li>
+        <li><strong>Invoicing</strong> — tied to the same client records, so you can see payment status without opening a second tool.</li>
+        <li><strong>Content planning</strong> — because for most freelancers, content is what fills the pipeline in the first place, and it should sit next to the results it produces, not in isolation.</li>
+      </ul>
+
+      <div class="callout">The point of consolidating isn't aesthetics — it's that a pipeline, invoices, and content plan sitting in one connected system make gaps visible. A stalled lead or an unpaid invoice is easy to spot when it's one view among three, not buried in a fourth app you forgot to open this week.</div>
+
+      <h2>Why Notion specifically</h2>
+      <p>Notion's databases can reference each other, which is exactly the property a freelance operations system needs: a client record that a content idea, an invoice, and a pipeline stage can all point back to. That's harder to replicate in a plain spreadsheet, and heavier than necessary in dedicated CRM or invoicing software built for teams, not solo operators.</p>
+
+      <h2>Studio Ledger</h2>
+      <p><strong>Studio Ledger</strong> is a Notion system built around exactly this shape: client pipelines, invoices, and content planning combined into one connected workspace, aimed specifically at freelancers and solo consultants rather than agencies. It's meant to replace the spreadsheet-plus-three-apps setup with a single place to check.</p>
+
+      <p><a class="btn" href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Get Studio Ledger on Gumroad →</a></p>
+    </div>
+  </article>
+
+  <footer class="site">
+    <div>© 2026 KS Games — built by Kenan. <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a></div>
+  </footer>
+</div>
+
+<script>
+  const fill = document.getElementById('gaugeFill');
+  const track = document.getElementById('gaugeTrack');
+  function updateGauge() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    fill.style.height = pct + '%';
+    document.querySelectorAll('.depth-gauge__marker').forEach(m => m.remove());
+    const meters = Math.round(pct * 3);
+    const marker = document.createElement('div');
+    marker.className = 'depth-gauge__marker mono';
+    marker.style.top = pct + '%';
+    marker.textContent = meters + 'm';
+    track.appendChild(marker);
+  }
+  window.addEventListener('scroll', updateGauge);
+  window.addEventListener('resize', updateGauge);
+  updateGauge();
+</script>
+</body>
+</html>
