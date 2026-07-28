@@ -1,145 +1,984 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KS Games — Unity tools, Notion systems &amp; indie games by Kenan</title>
-<meta name="description" content="KS Games is the solo dev studio of Kenan: Unity editor tools (Ad Integration Toolkit), the Studio Ledger Notion system for freelancers, the Wild Sprint Unity source-code template, and the upcoming underwater horror game Why It's Getting DARKER?!">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://ksgames.github.io/">
-<meta property="og:title" content="KS Games — Unity tools, Notion systems & indie games">
-<meta property="og:description" content="Unity editor tools, a Notion system for freelancers, and indie games from solo developer Kenan.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ksgames.github.io/">
-<meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "KS Games",
-  "url": "https://ksgames.github.io/",
-  "sameAs": ["https://ksgames.gumroad.com/"],
-  "founder": { "@type": "Person", "name": "Kenan" }
-}
-</script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KS Games — Unity tools, Notion systems &amp; indie games by Kenan</title>
+    <meta name="description" content="KS Games is the solo dev studio of Kenan: Unity editor tools (Ad Integration Toolkit), the Studio Ledger Notion system for freelancers, the Wild Sprint Unity source-code template, and the upcoming underwater horror game Why It's Getting DARKER?!" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://ksgames.github.io/" />
+    <meta property="og:title" content="KS Games — Unity tools, Notion systems & indie games" />
+    <meta property="og:description" content="Unity editor tools, a Notion system for freelancers, and indie games from solo developer Kenan." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ksgames.github.io/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" />
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "KS Games",
+            "url": "https://ksgames.github.io/",
+            "sameAs": ["https://ksgames.gumroad.com/"],
+            "founder": { "@type": "Person", "name": "Kenan" }
+        }
+    </script>
+    <style>
+        /* ============================================================
+               KS Games — "Depth Gauge" design system
+               Desktop-first · responsive
+               ============================================================ */
+
+        /* ---------- Variables ---------- */
+        :root {
+            --abyss: #060d16;
+            --abyss-surface: #0d1a28;
+            --abyss-surface-2: #122436;
+            --line: #1e3648;
+            --teal: #52e0c4;
+            --teal-dim: #2c6b62;
+            --teal-glow: rgba(82, 224, 196, 0.12);
+            --brass: #d9a35c;
+            --ink: #e9eef1;
+            --ink-dim: #93a7b3;
+            --ink-faint: #5c7280;
+            --radius: 4px;
+            --gauge-width: 48px;
+            --shell-max: 1040px;
+            --gap: 20px;
+        }
+
+        /* ---------- Reset & base ---------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+            * {
+                animation-duration: 0.001ms !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
+        body {
+            background: var(--abyss);
+            color: var(--ink);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(ellipse 1100px 600px at 10% -10%, rgba(82, 224, 196, 0.07), transparent 60%),
+                radial-gradient(ellipse 800px 700px at 100% 40%, rgba(217, 163, 92, 0.045), transparent 55%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+        }
+
+        /* ---------- Depth gauge (signature element) ---------- */
+        .depth-gauge {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            width: var(--gauge-width);
+            border-left: 1px solid var(--line);
+            z-index: 50;
+            display: flex;
+            align-items: stretch;
+            background: linear-gradient(180deg, rgba(6, 13, 22, 0.35), rgba(6, 13, 22, 0.80));
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            pointer-events: none;
+            transition: width 0.2s ease;
+        }
+
+        .depth-gauge__track {
+            position: relative;
+            flex: 1;
+            overflow: visible;
+        }
+
+        .depth-gauge__fill {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: linear-gradient(180deg, rgba(82, 224, 196, 0.18), rgba(82, 224, 196, 0.02));
+            height: 0%;
+            border-bottom: 1px solid var(--teal-dim);
+            transition: height 0.08s linear;
+        }
+
+        .depth-gauge__marker {
+            position: absolute;
+            right: 8px;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: var(--teal);
+            white-space: nowrap;
+            letter-spacing: 0.04em;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+            text-shadow: 0 0 12px rgba(6, 13, 22, 0.9);
+            pointer-events: none;
+        }
+
+        .depth-gauge::after {
+            content: 'DEPTH';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+            opacity: 0.2;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 820px) {
+            :root {
+                --gauge-width: 28px;
+            }
+            .depth-gauge__marker {
+                font-size: 7px;
+                right: 4px;
+            }
+            .depth-gauge::after {
+                font-size: 7px;
+                letter-spacing: 0.14em;
+            }
+        }
+
+        @media (max-width: 540px) {
+            :root {
+                --gauge-width: 20px;
+            }
+            .depth-gauge__marker {
+                display: none;
+            }
+            .depth-gauge::after {
+                font-size: 6px;
+                letter-spacing: 0.1em;
+            }
+        }
+
+        /* ---------- Layout shell ---------- */
+        .shell {
+            max-width: var(--shell-max);
+            margin: 0 auto;
+            padding: 0 32px 0 32px;
+            margin-right: var(--gauge-width);
+            width: 100%;
+            flex: 1;
+        }
+
+        @media (max-width: 820px) {
+            .shell {
+                padding: 0 20px 0 20px;
+                margin-right: var(--gauge-width);
+            }
+        }
+
+        @media (max-width: 540px) {
+            .shell {
+                padding: 0 14px 0 14px;
+                margin-right: var(--gauge-width);
+            }
+        }
+
+        /* ---------- Header ---------- */
+        header.site {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 0 24px;
+            border-bottom: 1px solid var(--line);
+            flex-wrap: wrap;
+            gap: 12px 24px;
+        }
+
+        .brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .brand small {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--ink-faint);
+            letter-spacing: 0.02em;
+        }
+
+        nav.site {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        nav.site a {
+            color: var(--ink-dim);
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: var(--radius);
+            transition: color 0.2s ease, background 0.2s ease;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        nav.site a:hover {
+            color: var(--teal);
+            background: var(--abyss-surface);
+        }
+
+        @media (max-width: 540px) {
+            header.site {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 18px 0 16px;
+            }
+            nav.site {
+                justify-content: flex-start;
+                gap: 4px;
+            }
+            nav.site a {
+                font-size: 13px;
+                padding: 4px 10px;
+            }
+            .brand {
+                font-size: 17px;
+            }
+            .brand small {
+                font-size: 10px;
+            }
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            padding: 100px 0 72px;
+            position: relative;
+        }
+
+        .hero__eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--teal);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero__eyebrow::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 14px var(--teal);
+            flex-shrink: 0;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(38px, 6.5vw, 64px);
+            line-height: 1.04;
+            margin: 0 0 22px;
+            letter-spacing: -0.02em;
+            max-width: 14ch;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--teal);
+            text-shadow: 0 0 40px var(--teal-glow);
+        }
+
+        .hero p.lede {
+            max-width: 58ch;
+            color: var(--ink-dim);
+            font-size: 19px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        @media (max-width: 720px) {
+            .hero {
+                padding: 64px 0 48px;
+            }
+            .hero h1 {
+                font-size: clamp(30px, 8vw, 42px);
+            }
+            .hero p.lede {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 0 32px;
+            }
+            .hero h1 {
+                font-size: 26px;
+            }
+            .hero__eyebrow {
+                font-size: 10px;
+                gap: 8px;
+            }
+        }
+
+        /* ---------- Sections ---------- */
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 34px;
+            gap: 16px 24px;
+            flex-wrap: wrap;
+        }
+
+        .section-head h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .section-head .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--ink-faint);
+            letter-spacing: 0.04em;
+            background: var(--abyss-surface);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--line);
+        }
+
+        .section-head .tag a {
+            transition: color 0.2s ease;
+        }
+        .section-head .tag a:hover {
+            color: var(--teal);
+        }
+
+        @media (max-width: 540px) {
+            section {
+                padding: 40px 0;
+            }
+            .section-head h2 {
+                font-size: 22px;
+            }
+            .section-head .tag {
+                font-size: 10px;
+                padding: 2px 10px;
+            }
+        }
+
+        /* ---------- Product cards (desktop grid) ---------- */
+        .plates {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        /* Desktop: 2 columns */
+        @media (min-width: 820px) {
+            .plates {
+                grid-template-columns: 1fr 1fr;
+                gap: 22px;
+            }
+            /* First card spans full width if there are 3+ items? Actually let's keep it clean:
+                   with 3 items, first spans full width on desktop for visual hierarchy */
+            .plates .plate:first-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .plates {
+                gap: 26px;
+            }
+        }
+
+        .plate {
+            border: 1px solid var(--line);
+            background: var(--abyss-surface);
+            border-radius: var(--radius);
+            padding: 28px 30px;
+            transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .plate:hover {
+            border-color: var(--teal-dim);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--teal-dim);
+        }
+
+        .plate__code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--brass);
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .plate h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            margin: 0 0 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .plate p {
+            color: var(--ink-dim);
+            margin: 0 0 18px;
+            font-size: 15px;
+            line-height: 1.65;
+            flex: 1;
+        }
+
+        .plate .meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--ink-faint);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 20px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(30, 54, 72, 0.4);
+        }
+
+        .plate .meta span {
+            background: var(--abyss-surface-2);
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+
+        .plate .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--teal-dim);
+            color: var(--teal);
+            background: transparent;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+            font-weight: 500;
+            cursor: pointer;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--teal);
+            color: var(--abyss);
+            border-color: var(--teal);
+            transform: scale(1.02);
+        }
+
+        .btn--ghost {
+            border-color: var(--line);
+            color: var(--ink-dim);
+        }
+
+        .btn--ghost:hover {
+            background: var(--abyss-surface-2);
+            color: var(--ink);
+            border-color: var(--ink-faint);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 540px) {
+            .plate {
+                padding: 20px 18px;
+            }
+            .plate h3 {
+                font-size: 19px;
+            }
+            .plate p {
+                font-size: 14px;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 8px 14px;
+            }
+            .plate .meta span {
+                font-size: 10px;
+                padding: 1px 8px;
+            }
+        }
+
+        /* ---------- Article list ---------- */
+        .logs {
+            display: grid;
+            gap: 2px;
+        }
+
+        .log {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px dashed var(--line);
+            text-decoration: none;
+            color: inherit;
+            transition: padding-left 0.2s ease;
+        }
+
+        .log:last-child {
+            border-bottom: none;
+        }
+
+        .log:hover {
+            padding-left: 8px;
+        }
+
+        .log__title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+
+        .log:hover .log__title {
+            color: var(--teal);
+        }
+
+        .log__meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--ink-faint);
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: 0.04em;
+        }
+
+        @media (max-width: 600px) {
+            .log {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                padding: 16px 0;
+            }
+            .log__title {
+                font-size: 16px;
+            }
+            .log__meta {
+                font-size: 10px;
+            }
+        }
+
+        /* ---------- Article page (prose) ---------- */
+        .article {
+            padding: 70px 0 40px;
+        }
+
+        .article__eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--brass);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .article h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 5vw, 42px);
+            line-height: 1.12;
+            margin: 0 0 18px;
+            letter-spacing: -0.01em;
+        }
+
+        .article__dek {
+            color: var(--ink-dim);
+            font-size: 18px;
+            max-width: 62ch;
+            margin-bottom: 12px;
+        }
+
+        .article__meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--ink-faint);
+            margin-bottom: 44px;
+        }
+
+        .prose {
+            max-width: 68ch;
+            font-size: 16px;
+        }
+
+        .prose h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            margin-top: 44px;
+            letter-spacing: -0.01em;
+        }
+
+        .prose h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 19px;
+            margin-top: 32px;
+        }
+
+        .prose p {
+            color: var(--ink-dim);
+            margin-bottom: 1.2em;
+        }
+
+        .prose ul,
+        .prose ol {
+            color: var(--ink-dim);
+            padding-left: 24px;
+            margin-bottom: 1.2em;
+        }
+
+        .prose li {
+            margin-bottom: 8px;
+        }
+
+        .prose strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .prose code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--abyss-surface-2);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: var(--teal);
+            border: 1px solid var(--line);
+        }
+
+        .callout {
+            border-left: 3px solid var(--teal);
+            background: var(--abyss-surface);
+            padding: 18px 24px;
+            margin: 32px 0;
+            font-size: 15px;
+            color: var(--ink-dim);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        @media (max-width: 540px) {
+            .article {
+                padding: 40px 0 24px;
+            }
+            .prose {
+                font-size: 15px;
+            }
+            .prose h2 {
+                font-size: 20px;
+                margin-top: 32px;
+            }
+            .callout {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* ---------- Footer ---------- */
+        footer.site {
+            padding: 48px 0 80px;
+            color: var(--ink-faint);
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            border-top: 1px solid var(--line);
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px 24px;
+        }
+
+        footer.site a {
+            color: var(--ink-dim);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: color 0.2s ease;
+        }
+
+        footer.site a:hover {
+            color: var(--teal);
+        }
+
+        @media (max-width: 600px) {
+            footer.site {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 32px 0 60px;
+                font-size: 12px;
+            }
+        }
+
+        /* ---------- Accessibility / selection ---------- */
+        ::selection {
+            background: var(--teal-dim);
+            color: var(--ink);
+        }
+
+        /* ---------- Scrollbar (optional polish) ---------- */
+        @media (min-width: 820px) {
+            ::-webkit-scrollbar {
+                width: 6px;
+                background: var(--abyss);
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--abyss);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--line);
+                border-radius: 3px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--teal-dim);
+            }
+        }
+
+        /* ---------- Utility: smooth fade-in on load (optional) ---------- */
+        .shell {
+            opacity: 0;
+            animation: shellFade 0.6s ease forwards;
+        }
+
+        @keyframes shellFade {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* reduce motion override */
+        @media (prefers-reduced-motion: reduce) {
+            .shell {
+                opacity: 1;
+                animation: none;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="depth-gauge" aria-hidden="true">
-  <div class="depth-gauge__track" id="gaugeTrack">
-    <div class="depth-gauge__fill" id="gaugeFill"></div>
-  </div>
-</div>
-
-<div class="shell">
-  <header class="site">
-    <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
-    <nav class="site">
-      <a href="#products">Products</a>
-      <a href="articles/index.html">Articles</a>
-      <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div class="hero__eyebrow">Solo dev studio · Baku, Azerbaijan</div>
-    <h1>Tools and worlds built<br>one dive at a <em>time.</em></h1>
-    <p class="lede">KS Games is Kenan's one-person studio. A Unity game developer who builds Unity Templates and productivity tools</p>
-  </section>
-
-  <section id="products">
-    <div class="section-head">
-      <h2>Products</h2>
-      <span class="tag mono">03 shipped</span>
-    </div>
-    <div class="plates">
-      
-      <article class="plate">
-        <div class="plate__code">Unity Source Template</div>
-        <h3>Wild Sprint</h3>
-        <p>A complete Unity endless-runner source-code template, built for developers who want to reskin and ship fast rather than start an endless runner from a blank scene.</p>
-        <div class="meta">
-          <span>$39.99</span>
-          <span>Full source</span>
-          <span>Reskin-ready</span>
+    <!-- ===== DEPTH GAUGE ===== -->
+    <div class="depth-gauge" aria-hidden="true">
+        <div class="depth-gauge__track" id="gaugeTrack">
+            <div class="depth-gauge__fill" id="gaugeFill"></div>
         </div>
-        <a class="btn" href="https://ksgames.gumroad.com/l/WildSprint" target="_blank" rel="noopener">View on Gumroad →</a>
-        <a class="btn btn--ghost" href="articles/unity-endless-runner-template.html">Read the article</a>
-      </article>
-      
-      <article class="plate">
-        <div class="plate__code">Notion System</div>
-        <h3>Studio Ledger</h3>
-        <p>A Notion system built for freelancers and solo consultants: client pipelines, invoices, and content planning living in one place instead of five disconnected tabs.</p>
-        <div class="meta">
-          <span>$19.99</span>
-          <span>Client pipeline</span>
-          <span>Invoicing</span>
-          <span>Content planner</span>
-        </div>
-        <a class="btn" href="https://ksgames.gumroad.com/studioledger" target="_blank" rel="noopener">View on Gumroad →</a>
-        <a class="btn btn--ghost" href="articles/notion-system-for-freelancers.html">Read the article</a>
-      </article>
-      
-      <article class="plate">
-        <div class="plate__code">Unity Editor Tool</div>
-        <h3>Quick GPGS Integrator for Unity</h3>
-        <p>The Quick GPGS Integrator is the ultimate solution for Unity developers looking to seamlessly integrate Google Play Games Services into their Android games. Whether you’re new to GPGS or looking for a quick setup, this package makes it easier than ever to get leaderboards, achievements, and sign-in functionality up and running.</p>
-        <div class="meta">
-          <span>Easy GPGS integration</span>
-          <span>Seamless solution for developers who struggle with GPGS integration</span>
-          <span>Unity</span>
-        </div>
-        <a class="btn" href="https://ksgames.gumroad.com/l/gxwxvj" target="_blank" rel="noopener">View on Gumroad →</a>
-      </article>
+    </div>
+
+    <!-- ===== SHELL ===== -->
+    <div class="shell">
+
+        <!-- HEADER -->
+        <header class="site">
+            <div class="brand">KS GAMES <small class="mono">// studio log</small></div>
+            <nav class="site">
+                <a href="#products">Products</a>
+                <a href="articles/index.html">Articles</a>
+                <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">Gumroad</a>
+            </nav>
+        </header>
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero__eyebrow">Solo dev studio · Baku, Azerbaijan</div>
+            <h1>Tools and worlds built<br />one dive at a <em>time.</em></h1>
+            <p class="lede">KS Games is Kenan's one-person studio. A Unity game developer who builds Unity Templates and productivity tools</p>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products">
+            <div class="section-head">
+                <h2>Products</h2>
+                <span class="tag mono">03 shipped</span>
+            </div>
+            <div class="plates">
+
+                <!-- Card 1: Wild Sprint -->
+                <article class="plate">
+                    <div class="plate__code">Unity Source Template</div>
+                    <h3>Wild Sprint</h3>
+                    <p>A complete Unity endless-runner source-code template, built for developers who want to reskin and ship fast rather than start an endless runner from a blank scene.</p>
+                    <div class="meta">
+                        <span>$39.99</span>
+                        <span>Full source</span>
+                        <span>Reskin-ready</span>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" href="https://ksgames.gumroad.com/l/WildSprint" target="_blank" rel="noopener">View on Gumroad →</a>
+                        <a class="btn btn--ghost" href="articles/unity-endless-runner-template.html">Read the article</a>
+                    </div>
+                </article>
+
+                <!-- Card 2: Studio Ledger -->
+                <article class="plate">
+                    <div class="plate__code">Notion System</div>
+                    <h3>Studio Ledger</h3>
+                    <p>A Notion system built for freelancers and solo consultants: client pipelines, invoices, and content planning living in one place instead of five disconnected tabs.</p>
+                    <div class="meta">
+                        <span>$19.99</span>
+                        <span>Client pipeline</span>
+                        <span>Invoicing</span>
+                        <span>Content planner</span>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" href="https://ksgames.gumroad.com/studioledger" target="_blank" rel="noopener">View on Gumroad →</a>
+                        <a class="btn btn--ghost" href="articles/notion-system-for-freelancers.html">Read the article</a>
+                    </div>
+                </article>
+
+                <!-- Card 3: Quick GPGS Integrator -->
+                <article class="plate">
+                    <div class="plate__code">Unity Editor Tool</div>
+                    <h3>Quick GPGS Integrator for Unity</h3>
+                    <p>The Quick GPGS Integrator is the ultimate solution for Unity developers looking to seamlessly integrate Google Play Games Services into their Android games. Whether you're new to GPGS or looking for a quick setup, this package makes it easier than ever to get leaderboards, achievements, and sign-in functionality up and running.</p>
+                    <div class="meta">
+                        <span>Easy GPGS integration</span>
+                        <span>Seamless solution</span>
+                        <span>Unity</span>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" href="https://ksgames.gumroad.com/l/gxwxvj" target="_blank" rel="noopener">View on Gumroad →</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ARTICLES -->
+        <section id="articles">
+            <div class="section-head">
+                <h2>From the studio log</h2>
+                <span class="tag mono"><a href="articles/index.html">all articles →</a></span>
+            </div>
+            <div class="logs">
+                <a class="log" href="articles/notion-system-for-freelancers.html">
+                    <span class="log__title">The best Notion setup for freelancers who hate admin</span>
+                    <span class="log__meta">GUIDE</span>
+                </a>
+                <a class="log" href="articles/unity-endless-runner-template.html">
+                    <span class="log__title">Should you buy a Unity endless runner template or build from scratch?</span>
+                    <span class="log__meta">GUIDE</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="site">
+            <span>© 2026 KS Games — built by Kenan.</span>
+            <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a>
+        </footer>
 
     </div>
-  </section>
+    <!-- /shell -->
 
-  <section id="articles">
-    <div class="section-head">
-      <h2>From the studio log</h2>
-      <span class="tag mono"><a href="articles/index.html" style="color:inherit;text-decoration:none;">all articles →</a></span>
-    </div>
-    <div class="logs">
-      <a class="log" href="articles/notion-system-for-freelancers.html">
-        <span class="log__title">The best Notion setup for freelancers who hate admin</span>
-        <span class="log__meta">GUIDE</span>
-      </a>
-      <a class="log" href="articles/unity-endless-runner-template.html">
-        <span class="log__title">Should you buy a Unity endless runner template or build from scratch?</span>
-        <span class="log__meta">GUIDE</span>
-      </a>
-    </div>
-  </section>
+    <script>
+        // Depth gauge scroll tracker
+        (function() {
+            const fill = document.getElementById('gaugeFill');
+            const track = document.getElementById('gaugeTrack');
 
-  <footer class="site">
-    <div>© 2026 KS Games — built by Kenan. <a href="https://ksgames.gumroad.com/" target="_blank" rel="noopener">ksgames.gumroad.com</a></div>
-  </footer>
-</div>
+            function updateGauge() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+                fill.style.height = pct + '%';
 
-<script>
-  const fill = document.getElementById('gaugeFill');
-  const track = document.getElementById('gaugeTrack');
-  function updateGauge() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-    fill.style.height = pct + '%';
-    document.querySelectorAll('.depth-gauge__marker').forEach(m => m.remove());
-    const meters = Math.round(pct * 3);
-    const marker = document.createElement('div');
-    marker.className = 'depth-gauge__marker mono';
-    marker.style.top = pct + '%';
-    marker.textContent = meters + 'm';
-    track.appendChild(marker);
-  }
-  window.addEventListener('scroll', updateGauge);
-  window.addEventListener('resize', updateGauge);
-  updateGauge();
-</script>
+                // Remove old marker
+                document.querySelectorAll('.depth-gauge__marker').forEach(function(m) { m.remove(); });
+
+                // Create new marker with "depth" value (just for flair)
+                const meters = Math.round(pct * 2.8);
+                const marker = document.createElement('div');
+                marker.className = 'depth-gauge__marker mono';
+                marker.style.top = Math.min(96, Math.max(4, pct)) + '%';
+                marker.textContent = meters + 'm';
+                track.appendChild(marker);
+            }
+
+            // Throttled scroll + resize
+            let ticking = false;
+            function onScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        updateGauge();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', updateGauge, { passive: true });
+            updateGauge();
+        })();
+    </script>
+
 </body>
 </html>
